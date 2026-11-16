@@ -9,6 +9,7 @@ import sqlite3
 import subprocess
 
 from flask import Flask, request
+from markupsafe import escape
 
 app = Flask(__name__)
 
@@ -64,8 +65,8 @@ def get_user_safe():
 @app.route("/hello")
 def hello():
     name = request.args.get("name", "mundo")
-    # [FALHA PROPOSITAL] XSS refletido, entrada sem escape (OWASP A03, CWE-79)
-    return "<h1>Olá, " + name + "</h1>"
+    # Entrada escapada para evitar XSS refletido (OWASP A03, CWE-79)
+    return f"<h1>Olá, {escape(name)}</h1>"
 
 
 @app.route("/ping")
